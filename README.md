@@ -119,13 +119,11 @@ sudo ./eudacertmgr-installer
 
 (Use `eudacertmgr-installer-linux-arm64.tar.gz` on ARM64 hosts.)
 
-The tarball includes `EULA.txt` and `DISCLAIMER.txt` at the top level alongside the installer — read those before extracting if you want to review the terms ahead of time (`tar -xzf eudacertmgr-installer-linux-amd64.tar.gz EULA.txt DISCLAIMER.txt`).
-
 The installer is interactive and idempotent. It will:
 
-1. Prompt for explicit acceptance of the EULA + Disclaimer in a pager (`$PAGER` if set, otherwise `less`); type `ACCEPT` at the post-pager prompt to continue. Headless / piped installs are not supported.
+1. Display the End User License Agreement and Disclaimer (shown in full at the bottom of this README) and require you to type `ACCEPT` to continue
 2. Create the `eudacertmgr` system user and group
-3. Install the EudaCertMgr binary and embedded deploy wrappers to `/opt/eudacertmgr/`, including the accepted `EULA.txt` and `DISCLAIMER.txt` for reference
+3. Install the EudaCertMgr binary and embedded deploy wrappers to `/opt/eudacertmgr/`
 4. Generate an Ed25519 SSH keypair for the `eudacertmgr` user at `/opt/eudacertmgr/.ssh/id_ed25519`
 5. Install and reload the systemd service and timer units
 6. Enable the nightly renewal timer
@@ -440,18 +438,56 @@ If you later restore onto a fresh install, EudaCertMgr auto-detects any deployme
 
 ---
 
-## License Agreement & Disclaimer
+## End User License Agreement
 
-EudaCertMgr ships with two legal documents that the operator must read and accept at install time:
+This End User License Agreement ("Agreement") is a binding legal agreement between you, or the organization on whose behalf you are installing or using this software ("Licensee"), and Euda Systems, Inc., a Texas corporation ("Licensor"). By installing, copying, accessing, or otherwise using EudaCertMgr (the "Software"), Licensee agrees to be bound by the terms of this Agreement. If Licensee does not agree to these terms, Licensee must not install or use the Software.
 
-- An **End User License Agreement** governing license grant, restrictions (no redistribution, copying, reverse engineering, or sublicensing), ownership, third-party components, term and termination, limitation of liability, jury-trial waiver, Texas DTPA waiver, US export compliance, and jurisdiction in Dallas County, Texas.
-- An **AS-IS Disclaimer** of warranties and operator responsibilities.
+**1. LICENSE GRANT.** Subject to Licensee's full and continuing compliance with this Agreement and payment of all applicable fees, Licensor grants Licensee a limited, non-exclusive, non-transferable, non-sublicensable license to install and run the Software solely for Licensee's own internal business operations, on hardware controlled by Licensee, and solely for the number of domains, hosts, or other licensable units covered by Licensee's active subscription or paid license entitlement.
 
-Both are bundled at the top level of the release tarball as `EULA.txt` and `DISCLAIMER.txt`, and the installer writes them to `/opt/eudacertmgr/EULA.txt` and `/opt/eudacertmgr/DISCLAIMER.txt` on every install and upgrade so the bytes the operator agreed to are always available on the host for reference.
+**2. RESTRICTIONS.** Except as expressly permitted by this Agreement, Licensee shall not, and shall not permit any third party to:
 
-> EudaCertMgr is provided **"AS IS", WITHOUT WARRANTY OF ANY KIND**, express or implied, including but not limited to the warranties of merchantability, fitness for a particular purpose, and non-infringement. In no event shall Euda Systems, Inc., its officers, employees, or contributors be liable for any claim, damages, or other liability — whether in an action of contract, tort, or otherwise — arising from, out of, or in connection with this software or the use or other dealings in this software. You are responsible for testing EudaCertMgr in your own environment before relying on it in production, monitoring its output, and keeping backups of your certificate state. Certificate management mistakes can take services offline; the operator is responsible for verifying every deployment.
+- **(a)** copy, reproduce, or duplicate the Software, in whole or in part, except for a single archival backup copy retained solely for disaster-recovery purposes;
+- **(b)** distribute, publish, sell, resell, sublicense, rent, lease, lend, host as a service, or otherwise make the Software available to any third party;
+- **(c)** modify, adapt, translate, or create derivative works of the Software;
+- **(d)** reverse engineer, decompile, disassemble, or otherwise attempt to derive the source code, underlying ideas, algorithms, structure, or organization of the Software, except to the limited extent applicable law expressly prohibits this restriction notwithstanding contractual waiver;
+- **(e)** remove, obscure, or alter any copyright, trademark, license, or other proprietary-rights notices contained in or displayed by the Software;
+- **(f)** use the Software to develop, train, or improve any product that competes with the Software, or to benchmark the Software for publication without Licensor's prior written consent;
+- **(g)** circumvent, disable, or interfere with any licensing, security, authentication, or usage-metering mechanism in the Software, including but not limited to forging, altering, or replaying license keys or tampering with any signed configuration; or
+- **(h)** use the Software in violation of any applicable law, regulation, or third-party right.
 
-The installer displays both documents in a pager (`$PAGER` if set, otherwise `less -R -X`) and requires the operator to type the literal word `ACCEPT` at the post-pager prompt before any system mutation. Anything else cancels the install — no service accounts, no files, no system changes. The prompt is interactive-only; piped or non-TTY stdin is rejected. The accepted version is recorded in `eudacertmgr.conf` (`EULA_ACCEPTED_VERSION` and `DISCLAIMER_ACCEPTED_VERSION`) for audit, and the prompt fires on every install and upgrade regardless of those stored values.
+**3. OWNERSHIP.** The Software is licensed, not sold. Licensor and its licensors retain all right, title, and interest in and to the Software, including all copyrights, patents, trade secrets, trademarks, and other intellectual property rights. No rights are granted to Licensee except as expressly set forth in this Agreement. All rights not expressly granted are reserved by Licensor.
+
+**4. CONFIDENTIALITY.** The Software, including its source code, structure, organization, and non-public functionality, constitutes the confidential and proprietary information of Licensor. Licensee shall protect the Software with at least the same degree of care it uses to protect its own confidential information of similar importance, and in no event less than a reasonable degree of care.
+
+**5. THIRD-PARTY COMPONENTS.** The Software includes or interoperates with third-party open-source components, each of which is licensed under its own terms. Those terms govern the use of the corresponding component and are unaffected by this Agreement.
+
+**6. TERM AND TERMINATION.** This Agreement is effective upon Licensee's first use of the Software and continues until terminated. Licensor may terminate this Agreement immediately upon written notice if Licensee breaches any term of this Agreement and fails to cure such breach within ten (10) days of written notice. Upon termination, Licensee shall immediately cease all use of the Software and destroy or permanently remove all copies in its possession or control. Sections 2, 3, 4, 6, 7, 8, 9, 10, 11, and 12 survive termination.
+
+**7. DISCLAIMER OF WARRANTIES.** The Software is provided to Licensee as set forth in the accompanying Disclaimer, the terms of which are incorporated into this Agreement by reference. Without limiting that disclaimer, Licensor makes no warranty that the Software will be uninterrupted, error-free, or meet Licensee's specific requirements.
+
+**8. LIMITATION OF LIABILITY.** To the maximum extent permitted by applicable law, in no event shall Licensor's aggregate liability arising out of or related to this Agreement or the Software exceed the fees paid by Licensee to Licensor for the Software during the twelve (12) months immediately preceding the event giving rise to the claim. In no event shall Licensor be liable for any indirect, incidental, special, consequential, or punitive damages, or for lost profits, lost revenue, lost data, or business interruption, even if advised of the possibility of such damages.
+
+**9. GENERAL.** This Agreement constitutes the entire agreement between the parties with respect to the Software and supersedes all prior or contemporaneous understandings. This Agreement is governed by the laws of the State of Texas, without regard to its conflict-of-laws rules. Any dispute arising under this Agreement shall be brought exclusively in the state or federal courts located in Dallas County, Texas, and the parties consent to the personal jurisdiction of those courts. If any provision of this Agreement is held unenforceable, the remaining provisions remain in full force and effect. Failure to enforce any provision is not a waiver of the right to enforce it later. Licensee may not assign this Agreement without Licensor's prior written consent; Licensor may assign this Agreement freely. This Agreement does not create any agency, partnership, joint venture, or employment relationship.
+
+**10. JURY TRIAL WAIVER.** Each party hereby irrevocably and unconditionally waives any right it may have to a trial by jury in any legal proceeding directly or indirectly arising out of or relating to this Agreement, the Software, or the transactions contemplated by this Agreement, whether sounding in contract, tort, or otherwise. Each party acknowledges that this waiver is a material inducement for the other party to enter into this Agreement.
+
+**11. WAIVER OF TEXAS DTPA.** Licensee, after consultation (or the opportunity to consult) with an attorney of its own selection, voluntarily waives the provisions of the Texas Deceptive Trade Practices-Consumer Protection Act, Texas Business and Commerce Code §17.41 et seq., a law that gives consumers special rights and protections, except for §17.555 (action for contribution or indemnity). Licensee represents that it is a business consumer with assets of $25 million or more, or is owned or controlled by a corporation or entity with assets of $25 million or more, OR is acquiring the Software for commercial or business use, has knowledge and experience in financial and business matters that enable it to evaluate the merits and risks of the transaction, and is not in a significantly disparate bargaining position.
+
+**12. EXPORT COMPLIANCE.** The Software may be subject to United States export-control laws and regulations, including the Export Administration Regulations (15 CFR Parts 730-774). Licensee shall comply with all applicable export and re-export-control laws and shall not, directly or indirectly, export, re-export, transfer, or release the Software to (a) any country subject to a comprehensive United States embargo or otherwise identified on relevant United States government restricted-country lists; (b) any individual or entity identified on the United States Treasury Department's List of Specially Designated Nationals, the United States Commerce Department's Denied Persons List or Entity List, or any equivalent list maintained by an applicable governmental authority; or (c) any end use prohibited by applicable export-control laws, including nuclear, chemical, biological, or missile end uses. Licensee represents that it is not located in, under the control of, or a national or resident of any such country, and is not on any such restricted-party list.
+
+By proceeding with installation or upgrade, Licensee accepts these terms on behalf of itself and the organization deploying the Software.
+
+---
+
+## Disclaimer
+
+EudaCertMgr is provided **"AS IS", WITHOUT WARRANTY OF ANY KIND**, express or implied, including but not limited to the warranties of merchantability, fitness for a particular purpose, and non-infringement.
+
+In no event shall Euda Systems, Inc., its officers, employees, or contributors be liable for any claim, damages, or other liability — whether in an action of contract, tort, or otherwise — arising from, out of, or in connection with this software or the use or other dealings in this software.
+
+You are responsible for testing EudaCertMgr in your own environment before relying on it in production, monitoring its output, and keeping backups of your certificate state. Certificate management mistakes can take services offline; the operator is responsible for verifying every deployment.
+
+By proceeding with installation or upgrade, you accept these terms on behalf of yourself and the organization deploying this software.
 
 ---
 
