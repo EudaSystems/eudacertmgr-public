@@ -119,13 +119,16 @@ sudo ./eudacertmgr-installer
 
 (Use `eudacertmgr-installer-linux-arm64.tar.gz` on ARM64 hosts.)
 
+The tarball includes `EULA.txt` and `DISCLAIMER.txt` at the top level alongside the installer — read those before extracting if you want to review the terms ahead of time (`tar -xzf eudacertmgr-installer-linux-amd64.tar.gz EULA.txt DISCLAIMER.txt`).
+
 The installer is interactive and idempotent. It will:
 
-1. Create the `eudacertmgr` system user and group
-2. Install the EudaCertMgr binary and embedded deploy wrappers to `/opt/eudacertmgr/`
-3. Generate an Ed25519 SSH keypair for the `eudacertmgr` user at `/opt/eudacertmgr/.ssh/id_ed25519`
-4. Install and reload the systemd service and timer units
-5. Enable the nightly renewal timer
+1. Prompt for explicit acceptance of the EULA + Disclaimer in a pager (`$PAGER` if set, otherwise `less`); type `ACCEPT` at the post-pager prompt to continue. Headless / piped installs are not supported.
+2. Create the `eudacertmgr` system user and group
+3. Install the EudaCertMgr binary and embedded deploy wrappers to `/opt/eudacertmgr/`, including the accepted `EULA.txt` and `DISCLAIMER.txt` for reference
+4. Generate an Ed25519 SSH keypair for the `eudacertmgr` user at `/opt/eudacertmgr/.ssh/id_ed25519`
+5. Install and reload the systemd service and timer units
+6. Enable the nightly renewal timer
 
 After install, finish setup from the interactive menu:
 
@@ -341,26 +344,6 @@ When an interactive operation prompts for deployment targets you can deploy to a
 | `1,3,5` | Specific servers by number |
 | `Q` | Back / cancel |
 
-### CLI reference (for automation only)
-
-The nightly systemd timer drives EudaCertMgr via `eudacertmgr renew`. The same one-shot subcommands are available if you'd rather wire EudaCertMgr into cron, Ansible, or your own scripts — but day-to-day operations do not require them; everything below has an equivalent menu entry.
-
-```bash
-eudacertmgr renew                                    # Renew all enabled certs (what the nightly timer runs)
-eudacertmgr <cert-fqdn> renew                        # Renew one cert if due, then deploy
-eudacertmgr <cert-fqdn> force                        # Force reissue regardless of expiry
-eudacertmgr <cert-fqdn> deployonly                   # Deploy the current cert without reissuing
-eudacertmgr verify [<cert-fqdn>]                     # Run the TLS verification pass on demand
-eudacertmgr monitor add | list | remove ...          # Manage external-only TLS monitoring entries
-eudacertmgr dns ensure-subdelegation <cert-fqdn>     # Create the _acme-challenge sub-delegation zone (Route 53)
-eudacertmgr timer status | install | uninstall       # systemd timer management
-eudacertmgr extract-wrappers <dir>                   # Dump the embedded deploy wrappers
-eudacertmgr setup                                    # Re-run first-time configuration
-eudacertmgr uninstall                                # Remove EudaCertMgr + optionally clean up remote service accounts
-```
-
-`<cert-fqdn>` is the certificate's fully-qualified name — e.g. `*.example.com`, `api.example.com`, or `proxy.example.com`.
-
 ---
 
 ## Directory Structure
@@ -457,30 +440,18 @@ If you later restore onto a fresh install, EudaCertMgr auto-detects any deployme
 
 ---
 
-## Build From Source
+## License Agreement & Disclaimer
 
-Requires Go 1.23+.
+EudaCertMgr ships with two legal documents that the operator must read and accept at install time:
 
-```
-make build       # local build
-make test        # unit tests
-make cross       # linux/amd64 + linux/arm64 to dist/
-make readme      # regenerate README.md from README.md.in (substitutes v6.9)
-```
+- An **End User License Agreement** governing license grant, restrictions (no redistribution, copying, reverse engineering, or sublicensing), ownership, third-party components, term and termination, limitation of liability, jury-trial waiver, Texas DTPA waiver, US export compliance, and jurisdiction in Dallas County, Texas.
+- An **AS-IS Disclaimer** of warranties and operator responsibilities.
 
-Releases are tagged `v*` on the default branch; the `release` workflow builds the cross-platform tarballs and SHA256SUMS and attaches them to the GitHub release automatically.
+Both are bundled at the top level of the release tarball as `EULA.txt` and `DISCLAIMER.txt`, and the installer writes them to `/opt/eudacertmgr/EULA.txt` and `/opt/eudacertmgr/DISCLAIMER.txt` on every install and upgrade so the bytes the operator agreed to are always available on the host for reference.
 
----
+> EudaCertMgr is provided **"AS IS", WITHOUT WARRANTY OF ANY KIND**, express or implied, including but not limited to the warranties of merchantability, fitness for a particular purpose, and non-infringement. In no event shall Euda Systems, Inc., its officers, employees, or contributors be liable for any claim, damages, or other liability — whether in an action of contract, tort, or otherwise — arising from, out of, or in connection with this software or the use or other dealings in this software. You are responsible for testing EudaCertMgr in your own environment before relying on it in production, monitoring its output, and keeping backups of your certificate state. Certificate management mistakes can take services offline; the operator is responsible for verifying every deployment.
 
-## Disclaimer
-
-EudaCertMgr is provided **"AS IS", WITHOUT WARRANTY OF ANY KIND**, express or implied, including but not limited to the warranties of merchantability, fitness for a particular purpose, and non-infringement.
-
-In no event shall Euda Systems, Inc., its officers, employees, or contributors be liable for any claim, damages, or other liability — whether in an action of contract, tort, or otherwise — arising from, out of, or in connection with this software or the use or other dealings in this software.
-
-You are responsible for testing EudaCertMgr in your own environment before relying on it in production, monitoring its output, and keeping backups of your certificate state. Certificate management mistakes can take services offline; the operator is responsible for verifying every deployment.
-
-The installer prompts for explicit acceptance of these terms before performing any system changes. Upgrades that cross a release boundary re-prompt; re-running the same installer does not.
+The installer displays both documents in a pager (`$PAGER` if set, otherwise `less -R -X`) and requires the operator to type the literal word `ACCEPT` at the post-pager prompt before any system mutation. Anything else cancels the install — no service accounts, no files, no system changes. The prompt is interactive-only; piped or non-TTY stdin is rejected. The accepted version is recorded in `eudacertmgr.conf` (`EULA_ACCEPTED_VERSION` and `DISCLAIMER_ACCEPTED_VERSION`) for audit, and the prompt fires on every install and upgrade regardless of those stored values.
 
 ---
 
