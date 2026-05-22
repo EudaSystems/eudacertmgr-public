@@ -3,7 +3,9 @@
 
 **Stop managing TLS / SSL certificates manually!**
 
-EudaCertMgr handles issuance, renewal, and deployment across your entire Linux and Windows fleet — automatically, from a single control host.
+**On-premises, behind your firewall.** EudaCertMgr runs on your hardware, under your control — no SaaS dashboard, no third-party-hosted control plane, no inbound internet listener. Your certificates, private keys, target inventory, and configuration stay on the orchestrator host you own.
+
+EudaCertMgr handles issuance, renewal, and deployment across your entire Linux and Windows fleet — automatically, from a single control host inside your network.
 
 **The problem:** The CA/Browser Forum — the industry body that governs every publicly-trusted certificate authority — has mandated a phased reduction of TLS certificate lifetimes for all publicly-trusted certificates: a maximum of 200 days by March 2026, 100 days by March 2027, and **47 days by March 2029**. At that cadence, manually renewing and deploying certificates across a fleet of servers is no longer feasible — every missed renewal is an outage waiting to happen.
 
@@ -15,9 +17,10 @@ EudaCertMgr handles issuance, renewal, and deployment across your entire Linux a
 
 - **Easy install** — up and running in as little as 15 minutes
 - **Easy setup** — menu-driven prompts guide you through onboarding targets, configuring certificates, and every administrative task; no config-file editing required
+- **Fully on-premises** — runs entirely inside your network on hardware you control. No SaaS dashboard, no third-party-hosted control plane, no agent on managed hosts. Certificates, private keys, target list, and configuration live only on the orchestrator host. The orchestrator initiates every connection it makes; no inbound internet listener is required
 - **Automatic renewal** — nightly checks renew certificates before expiry; no manual intervention required
 - **Monitor ANY URL certificate** — get email alerts about impending expirations (configurable lead time) for any certificate, even ones not managed by EudaCertMgr. Watch sites whose cert renewal you don't control (WordPress, Squarespace, Shopify, GoDaddy, Wix, self-managed certbot deployments, etc.) and catch silent renewal failures before they become outages
-- **Any ACME-compatible CA, selectable per certificate** — Let's Encrypt, ZeroSSL, Buypass Go SSL, SSL.com, and others
+- **Any ACME-compatible CA, selectable per certificate** — Let's Encrypt, ZeroSSL, Google Public CA, Buypass Go SSL, SSL.com, and others
 - **180+ DNS providers supported** — Cloudflare, Route53, Azure DNS, GoDaddy, DigitalOcean, and more via acme.sh
 - **Multi-target deployment** — deploy to any Linux or Windows system that uses on-disk certificates (web servers, mail servers, load balancers, etc.) in a single operation
 - **Customizable deployment scripts** — for the unusual cases (Tomcat, Java keystores, non-systemd daemons, HA pairs, container restarts), open a per-target deployment script in your editor — pre-populated with a heavily-commented default template that walks you through every step, so you can adapt it for your stack without bash or PowerShell expertise
@@ -70,7 +73,7 @@ EudaCertMgr is the only product that combines all of these capabilities in a sin
 
 *Certify The Web's "centralized dashboard" is renewal-monitoring only — every managed server still runs its own copy of the Windows desktop app. EudaCertMgr's model is one Linux orchestrator that pushes to every target over SSH; targets carry no EudaCertMgr software footprint at all.*
 
-EudaCertMgr is built to stay out of your way. There's no dashboard to maintain, no API surface to secure, no HSM to provision, no Kubernetes operator to run. You install it, point it at your fleet, and never think about TLS renewals again.
+EudaCertMgr is fully on-premises — it runs on your hardware, behind your firewall, with no cloud dashboard to maintain and no third-party-hosted control plane sitting between you and your certificates. There's no API surface to secure, no HSM to provision, no Kubernetes operator to run. You install it, point it at your fleet, and never think about TLS renewals again.
 
 ---
 
@@ -448,7 +451,7 @@ If you later restore onto a fresh install, EudaCertMgr auto-detects any deployme
 - PFX files are encrypted with a per-certificate password generated at onboarding.
 - DNS provider credentials should be scoped to the minimum permissions required for DNS record management.
 - The `eudacertmgr` OS account on each target is created by the onboarding flow and should not be used for interactive logins outside of eudacertmgr operations.
-- Backups of the installation can optionally be password-encrypted (AES-256-CBC via `openssl enc`) from the menu — recommended when storing backups off-host, since an unencrypted backup contains the SSH private key and DNS provider credentials.
+- Backups of the installation can optionally be password-encrypted from the menu — recommended when storing backups off-host, since an unencrypted backup contains the SSH private key and DNS provider credentials.
 - Custom deployment scripts may contain secrets (API tokens, webhook URLs). They live as regular files alongside the target config (`<cert_dir>/targets/<host>.deploy.sh` on Linux, `.deploy.ps1` on Windows) at mode `640 eudacertmgr:eudacertmgr` — same protection as SSH keys and cert private keys.
 - When the **local self-signed CA** is initialized, the CA private key at `/opt/eudacertmgr/ca/ca.key` can sign any internal cert chained to that root. Anyone with read access to that file can mint server certs trusted by every machine that imported the CA root — protect it like the SSH private key it sits next to (file mode `600`, owned by the `eudacertmgr` user, no passphrase by design so the renewer can run unattended under the systemd timer).
 
