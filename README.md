@@ -467,4 +467,4 @@ By proceeding with installation or upgrade, you accept these terms on behalf of 
 Copyright &copy; 2026 Euda Systems, Inc. All Rights Reserved.
 Author: Allen Swope
 
-This release: v6.9.4
+This release: v6.9.5
