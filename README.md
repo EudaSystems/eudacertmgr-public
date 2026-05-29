@@ -49,6 +49,7 @@ In addition to the automated nightly mode, EudaCertMgr provides a full interacti
 - Change the nightly timer schedule
 - Back up and restore the installation (encrypted backups + auto-reprovision of remote service accounts after restore)
 - Initialize and manage a local self-signed CA for lab boxes, split-DNS internal services, and anything that can't reach a public ACME CA — including pushing the root into Linux targets' trust stores, publishing it forest-wide to Active Directory for Windows GPO distribution, and exporting it as an Apple Configuration Profile for MDM-managed Macs
+- Manage licensing — view each license slot and its status, buy a license, or cancel a license or trial; each issuer/domain pair carries its own license
 
 ---
 
@@ -341,36 +342,6 @@ When an interactive operation prompts for deployment targets you can deploy to a
 | `W` | All Windows servers |
 | `1,3,5` | Specific servers by number |
 | `Q` | Back / cancel |
-
----
-
-## Directory Structure
-
-```
-/opt/eudacertmgr/
-├── eudacertmgr                                  # main binary (installer + runtime; argv[0] selects mode)
-├── eudacertmgr-uninstaller                      # separate uninstaller binary
-├── eudacertmgr.conf                             # global settings
-│
-├── lib/                                         # extracted deploy wrappers (deploy_linux_acme.sh, deploy_linux_ca.sh, deploy_windows.ps1)
-├── certificates/                                # one subtree per base domain
-│   └── <base-domain>/                           # e.g. example.com/
-│       ├── _wildcard/                           # *.example.com cert
-│       │   ├── _wildcard.conf                   # per-cert config (targets, thresholds, etc.)
-│       │   ├── cert.pem key.pem fullchain.pem cert.pfx …
-│       │   └── targets/<host>.conf              # per-target SERVICES + TLS check list
-│       ├── api/                                 # single-host cert for api.example.com
-│       │   └── api.conf, cert.pem, targets/
-│       └── internal/                            # nested zones (e.g. *.internal.example.com)
-│           └── _wildcard/ _wildcard.conf, …
-├── logs/                                        # per-run logs (flat, filename is <cert-fqdn>_<timestamp>.log)
-├── acme/                                        # ACME client and state
-├── ca/                                          # local self-signed CA (only when initialized) — ca.crt, ca.key, ca.serial, ca.meta.json, issued/<serial>.crt
-├── selfsigned/                                  # per-cert self-signed state (only when self-signed certs exist) — mirrors acme/'s layout
-└── generated/                                   # transient Windows bootstrap .ps1s, auto-deleted after SSH key auth verifies
-```
-
-All configuration is managed through the `eudacertmgr` menu; direct editing of files in `/opt/eudacertmgr/` is not required and is discouraged.
 
 ---
 
