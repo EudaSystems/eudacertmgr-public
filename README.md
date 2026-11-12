@@ -20,7 +20,7 @@ EudaCertMgr handles issuance, renewal, and deployment across your entire Linux a
 - **Fully on-premises** — runs entirely inside your network on hardware you control. No SaaS dashboard, no third-party-hosted control plane, no agent on managed hosts. Certificates, private keys, target list, and configuration live only on the orchestrator host. The orchestrator initiates every connection it makes; no inbound internet listener is required
 - **Automatic renewal** — nightly checks renew certificates before expiry; no manual intervention required
 - **Monitor ANY URL certificate** — get email alerts about impending expirations (configurable lead time) for any certificate, even ones not managed by EudaCertMgr. Watch sites whose cert renewal you don't control (WordPress, Squarespace, Shopify, GoDaddy, Wix, self-managed certbot deployments, etc.) and catch silent renewal failures before they become outages
-- **Any ACME-compatible CA, selectable per certificate** — Let's Encrypt, ZeroSSL, Google Public CA, Buypass Go SSL, SSL.com, and others
+- **Any ACME-compatible CA, selectable per certificate** — Let's Encrypt, ZeroSSL, Google Public CA, SSL.com, and others
 - **180+ DNS providers supported** — Cloudflare, Route53, Azure DNS, GoDaddy, DigitalOcean, and more via acme.sh
 - **Multi-target deployment** — deploy to any Linux or Windows system that uses on-disk certificates (web servers, mail servers, load balancers, etc.) in a single operation
 - **Customizable deployment scripts** — for the unusual cases (Tomcat, Java keystores, non-systemd daemons, HA pairs, container restarts), open a per-target deployment script in your editor — pre-populated with a heavily-commented default template that walks you through every step, so you can adapt it for your stack without bash or PowerShell expertise
@@ -49,7 +49,7 @@ In addition to the automated nightly mode, EudaCertMgr provides a full interacti
 - Change the nightly timer schedule
 - Back up and restore the installation (encrypted backups + auto-reprovision of remote service accounts after restore)
 - Initialize and manage a local self-signed CA for lab boxes, split-DNS internal services, and anything that can't reach a public ACME CA — including pushing the root into Linux targets' trust stores, publishing it forest-wide to Active Directory for Windows GPO distribution, and exporting it as an Apple Configuration Profile for MDM-managed Macs
-- Manage licensing — view each license slot and its status, buy a license, or cancel a license or trial; each issuer/domain pair carries its own license
+- Manage licensing — view each EudaCertMgr license slot and its status, buy a license, or cancel a license or trial; each issuer/domain pair carries its own EudaCertMgr license. The certificate authority is never part of this: ACME CAs issue at no charge
 
 ---
 
@@ -467,4 +467,4 @@ By proceeding with installation or upgrade, you accept these terms on behalf of 
 Copyright &copy; 2026 Euda Systems, Inc. All Rights Reserved.
 Author: Allen Swope
 
-This release: v7.14
+This release: v7.15
